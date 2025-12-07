@@ -804,9 +804,15 @@
             type();
         }
 
-        // Música de fondo (síntesis de audio)
+        // Música de fondo personalizada (MP3)
+        let backgroundMusic;
+        
         function initAudio() {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            // Crear elemento de audio para la música de fondo
+            backgroundMusic = new Audio('Brandon Bison - Tú Y Sólo Tú.mp3'); // ⚠️ CAMBIA 'musica.mp3' por el nombre de tu archivo
+            backgroundMusic.loop = true; // La música se repite
+            backgroundMusic.volume = 0.3; // Volumen al 30% (puedes cambiar de 0.0 a 1.0)
         }
 
         function playPlantSound() {
@@ -828,11 +834,10 @@
             oscillator.stop(audioContext.currentTime + 0.3);
         }
 
-        let musicInterval;
         function toggleMusic() {
             const btn = document.getElementById('musicBtn');
             
-            if (!audioContext) {
+            if (!backgroundMusic) {
                 initAudio();
             }
 
@@ -840,41 +845,16 @@
                 musicPlaying = true;
                 btn.classList.add('active');
                 btn.textContent = '🎵 Pausar';
-                playBackgroundMusic();
+                backgroundMusic.play().catch(err => {
+                    console.log('Error al reproducir música:', err);
+                    alert('No se pudo cargar la música. Asegúrate de que el archivo "musica.mp3" esté en la misma carpeta que index.html');
+                });
             } else {
                 musicPlaying = false;
                 btn.classList.remove('active');
                 btn.textContent = '🎵 Música';
-                if (musicInterval) clearInterval(musicInterval);
+                backgroundMusic.pause();
             }
-        }
-
-        function playBackgroundMusic() {
-            if (!musicPlaying) return;
-
-            const notes = [523.25, 587.33, 659.25, 698.46, 783.99]; // C, D, E, F, G
-            let noteIndex = 0;
-
-            musicInterval = setInterval(() => {
-                if (!musicPlaying) return;
-
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = notes[noteIndex % notes.length];
-                oscillator.type = 'triangle';
-                
-                gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.8);
-                
-                noteIndex++;
-            }, 800);
         }
 
         // Modo noche
