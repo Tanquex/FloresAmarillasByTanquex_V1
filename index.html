@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flores Amarillas para Ti 🌻</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
@@ -12,341 +14,945 @@
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Georgia', serif;
+            font-family: 'Poppins', sans-serif;
             overflow: hidden;
             position: relative;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            cursor: none;
         }
 
-        .container {
-            text-align: center;
-            z-index: 10;
-            position: relative;
+        /* Cursor personalizado */
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #FFD700;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.15s ease;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
-        h1 {
-            color: #fff;
-            font-size: 3em;
-            margin-bottom: 20px;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+        .cursor-trail {
+            width: 6px;
+            height: 6px;
+            background: #FFD700;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            animation: trailFade 0.8s ease-out forwards;
+        }
+
+        @keyframes trailFade {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+
+        /* Pantalla de bienvenida */
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9000;
             animation: fadeIn 1s ease-in;
         }
 
-        .message {
-            color: #fff;
-            font-size: 1.5em;
-            margin-bottom: 40px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            animation: fadeIn 1.5s ease-in;
-            font-style: italic;
-        }
-
-        .garden {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
+        .welcome-screen.hidden {
+            animation: fadeOut 1s ease-out forwards;
             pointer-events: none;
         }
 
-        .flower {
-            position: absolute;
-            animation: grow 2s ease-out forwards;
-            transform-origin: bottom center;
-            filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.3));
+        .welcome-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 5em;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            margin-bottom: 30px;
+            animation: glow 2s ease-in-out infinite;
         }
 
-        .sunflower {
-            animation: grow 2s ease-out forwards, sway 3s ease-in-out infinite;
+        .welcome-subtitle {
+            font-size: 1.8em;
+            color: white;
+            margin-bottom: 50px;
+            text-align: center;
+            padding: 0 20px;
         }
 
-        @keyframes grow {
+        .start-button {
+            padding: 20px 60px;
+            font-size: 1.5em;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 50px;
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+            transition: all 0.3s ease;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .start-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.8);
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+            50% { text-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.8); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Controles principales */
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .control-btn {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .control-btn.active {
+            background: rgba(255, 215, 0, 0.5);
+            border-color: #FFD700;
+        }
+
+        /* Contador de flores */
+        .flower-counter {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 20px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Mensaje central */
+        .message-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .main-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4em;
+            color: white;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.5);
+            margin-bottom: 20px;
+            animation: fadeInScale 2s ease-out;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: fadeInScale 2.5s ease-out;
+        }
+
+        .typing-text {
+            font-size: 1.3em;
+            color: #FFD700;
+            margin-top: 20px;
+            min-height: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes fadeInScale {
             from {
-                transform: scale(0) translateY(50px);
                 opacity: 0;
+                transform: scale(0.5);
             }
             to {
-                transform: scale(1) translateY(0);
                 opacity: 1;
+                transform: scale(1);
             }
         }
 
-        @keyframes sway {
-            0%, 100% {
-                transform: rotate(-2deg);
-            }
-            50% {
-                transform: rotate(2deg);
-            }
+        /* Canvas para flores y efectos */
+        #flowerCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Partículas de fondo */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 215, 0, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            animation: float 15s infinite ease-in-out;
         }
 
         @keyframes float {
             0%, 100% {
-                transform: translateY(0px);
+                transform: translateY(0) translateX(0);
+                opacity: 0;
             }
-            50% {
-                transform: translateY(-10px);
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
             }
         }
 
-        .button {
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
+        /* Modal de mensaje */
+        .message-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 30px;
+            max-width: 500px;
+            width: 90%;
+            z-index: 2000;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .message-modal.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .modal-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5em;
+            color: #764ba2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-text {
+            font-size: 1.2em;
             color: #333;
+            line-height: 1.8;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .close-modal {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
             border: none;
-            padding: 18px 45px;
-            font-size: 1.3em;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-            margin: 10px;
+            border-radius: 25px;
+            color: #333;
             font-weight: bold;
-            animation: float 3s ease-in-out infinite;
+            cursor: pointer;
+            font-size: 1.1em;
+            display: block;
+            margin: 0 auto;
+            transition: all 0.3s ease;
         }
 
-        .button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            background: linear-gradient(135deg, #ffed4e, #ffd700);
+        .close-modal:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 165, 0, 0.5);
         }
 
-        .button:active {
-            transform: translateY(-2px) scale(1.02);
+        /* Instrucciones */
+        .instructions {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            z-index: 1000;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
 
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-            .message {
-                font-size: 1.2em;
-                padding: 0 20px;
-            }
+            .main-title { font-size: 2.5em; }
+            .subtitle { font-size: 1.2em; }
+            .welcome-title { font-size: 3em; }
+            .controls { top: 10px; right: 10px; }
+            .flower-counter { top: 10px; left: 10px; font-size: 1em; }
+            .instructions { bottom: 10px; font-size: 0.9em; }
         }
     </style>
 </head>
 <body>
-    <div class="garden" id="garden"></div>
-    
-    <div class="container">
-        <h1>🌻 Flores Amarillas para Ti 🌻</h1>
-        <p class="message">Un regalo especial hecho con cariño</p>
-        <button class="button" onclick="createFlower()">✨ Crear más flores ✨</button>
+    <!-- Pantalla de bienvenida -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <h1 class="welcome-title">🌻 Flores Amarillas 🌻</h1>
+        <p class="welcome-subtitle">Un jardín especial creado con cariño</p>
+        <button class="start-button" onclick="startExperience()">✨ Comenzar ✨</button>
+    </div>
+
+    <!-- Cursor personalizado -->
+    <div class="custom-cursor" id="cursor"></div>
+
+    <!-- Contador -->
+    <div class="flower-counter">
+        🌻 Flores: <span id="flowerCount">0</span>
+    </div>
+
+    <!-- Controles -->
+    <div class="controls">
+        <button class="control-btn" onclick="toggleMusic()" id="musicBtn">🎵 Música</button>
+        <button class="control-btn" onclick="toggleMode()" id="modeBtn">🌙 Modo Noche</button>
+        <button class="control-btn" onclick="showMessage()">💌 Mensaje</button>
+        <button class="control-btn" onclick="clearGarden()">🗑️ Limpiar</button>
+    </div>
+
+    <!-- Mensaje central -->
+    <div class="message-container">
+        <h1 class="main-title">Para Alguien Especial</h1>
+        <p class="subtitle">Haz click para plantar flores 🌻</p>
+        <div class="typing-text" id="typingText"></div>
+    </div>
+
+    <!-- Canvas para flores -->
+    <canvas id="flowerCanvas"></canvas>
+
+    <!-- Modal de mensaje -->
+    <div class="message-modal" id="messageModal">
+        <h2 class="modal-title">💛 Mensaje Especial 💛</h2>
+        <p class="modal-text">
+            Cada flor que ves aquí representa un momento especial, una sonrisa, un recuerdo.
+            Este jardín digital es mi forma de decirte lo importante que eres.
+            Que estas flores amarillas iluminen tu día tanto como tú iluminas el mío. 🌻✨
+        </p>
+        <button class="close-modal" onclick="closeMessage()">Cerrar</button>
+    </div>
+
+    <!-- Instrucciones -->
+    <div class="instructions">
+        👆 Haz click para plantar flores • Arrastra para crear magia ✨
     </div>
 
     <script>
-        function createSunflower(size = 1) {
-            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            svg.setAttribute("width", 120 * size);
-            svg.setAttribute("height", 180 * size);
-            svg.setAttribute("viewBox", "0 0 120 180");
-            
-            // Tallo
-            const stem = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            stem.setAttribute("d", "M60,180 Q55,140 60,100");
-            stem.setAttribute("stroke", "#2d5016");
-            stem.setAttribute("stroke-width", "4");
-            stem.setAttribute("fill", "none");
-            stem.setAttribute("stroke-linecap", "round");
-            svg.appendChild(stem);
-            
-            // Hojas
-            const leaf1 = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-            leaf1.setAttribute("cx", "45");
-            leaf1.setAttribute("cy", "140");
-            leaf1.setAttribute("rx", "15");
-            leaf1.setAttribute("ry", "8");
-            leaf1.setAttribute("fill", "#4a7c2e");
-            leaf1.setAttribute("transform", "rotate(-30 45 140)");
-            svg.appendChild(leaf1);
-            
-            const leaf2 = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-            leaf2.setAttribute("cx", "75");
-            leaf2.setAttribute("cy", "130");
-            leaf2.setAttribute("rx", "15");
-            leaf2.setAttribute("ry", "8");
-            leaf2.setAttribute("fill", "#4a7c2e");
-            leaf2.setAttribute("transform", "rotate(30 75 130)");
-            svg.appendChild(leaf2);
-            
-            // Pétalos (girasol)
-            const petalCount = 13;
-            const petalColors = ["#FFD700", "#FFC700", "#FFE135"];
-            
-            for (let i = 0; i < petalCount; i++) {
-                const angle = (i * 360 / petalCount) * Math.PI / 180;
-                const petal = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-                const distance = 22;
-                const cx = 60 + Math.cos(angle) * distance;
-                const cy = 50 + Math.sin(angle) * distance;
-                
-                petal.setAttribute("cx", cx);
-                petal.setAttribute("cy", cy);
-                petal.setAttribute("rx", "12");
-                petal.setAttribute("ry", "18");
-                petal.setAttribute("fill", petalColors[i % petalColors.length]);
-                petal.setAttribute("transform", `rotate(${i * 360 / petalCount} ${cx} ${cy})`);
-                petal.setAttribute("opacity", "0.95");
-                svg.appendChild(petal);
-            }
-            
-            // Centro del girasol
-            const center = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            center.setAttribute("cx", "60");
-            center.setAttribute("cy", "50");
-            center.setAttribute("r", "16");
-            center.setAttribute("fill", "#8B4513");
-            svg.appendChild(center);
-            
-            // Textura del centro
-            for (let i = 0; i < 30; i++) {
-                const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 12;
-                dot.setAttribute("cx", 60 + Math.cos(angle) * distance);
-                dot.setAttribute("cy", 50 + Math.sin(angle) * distance);
-                dot.setAttribute("r", "1");
-                dot.setAttribute("fill", "#654321");
-                dot.setAttribute("opacity", "0.6");
-                svg.appendChild(dot);
-            }
-            
-            return svg;
-        }
+        const canvas = document.getElementById('flowerCanvas');
+        const ctx = canvas.getContext('2d');
+        let flowers = [];
+        let particles = [];
+        let flowerCount = 0;
+        let musicPlaying = false;
+        let isDarkMode = false;
+        let audioContext;
+        let isMouseDown = false;
 
-        function createDaisy(size = 1) {
-            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            svg.setAttribute("width", 100 * size);
-            svg.setAttribute("height", 160 * size);
-            svg.setAttribute("viewBox", "0 0 100 160");
-            
-            // Tallo
-            const stem = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            stem.setAttribute("d", "M50,160 Q48,120 50,80");
-            stem.setAttribute("stroke", "#2d5016");
-            stem.setAttribute("stroke-width", "3");
-            stem.setAttribute("fill", "none");
-            svg.appendChild(stem);
-            
-            // Hoja
-            const leaf = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-            leaf.setAttribute("cx", "40");
-            leaf.setAttribute("cy", "120");
-            leaf.setAttribute("rx", "12");
-            leaf.setAttribute("ry", "6");
-            leaf.setAttribute("fill", "#4a7c2e");
-            leaf.setAttribute("transform", "rotate(-40 40 120)");
-            svg.appendChild(leaf);
-            
-            // Pétalos tipo margarita
-            const petalCount = 8;
-            for (let i = 0; i < petalCount; i++) {
-                const angle = (i * 360 / petalCount) * Math.PI / 180;
-                const petal = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-                const distance = 18;
-                const cx = 50 + Math.cos(angle) * distance;
-                const cy = 40 + Math.sin(angle) * distance;
-                
-                petal.setAttribute("cx", cx);
-                petal.setAttribute("cy", cy);
-                petal.setAttribute("rx", "8");
-                petal.setAttribute("ry", "15");
-                petal.setAttribute("fill", "#FFEB3B");
-                petal.setAttribute("transform", `rotate(${i * 360 / petalCount} ${cx} ${cy})`);
-                svg.appendChild(petal);
+        // Configurar canvas
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Cursor personalizado
+        const cursor = document.getElementById('cursor');
+        let mouseX = 0, mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX - 10 + 'px';
+            cursor.style.top = mouseY - 10 + 'px';
+
+            // Crear rastro
+            if (Math.random() > 0.8) {
+                createTrail(mouseX, mouseY);
             }
-            
-            // Centro
-            const center = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            center.setAttribute("cx", "50");
-            center.setAttribute("cy", "40");
-            center.setAttribute("r", "10");
-            center.setAttribute("fill", "#FF8C00");
-            svg.appendChild(center);
-            
-            return svg;
-        }
-
-        function createFlower() {
-            const garden = document.getElementById('garden');
-            const flowerDiv = document.createElement('div');
-            flowerDiv.className = 'flower sunflower';
-            
-            // Alternar entre girasol y margarita
-            const flowerType = Math.random() > 0.5 ? createSunflower(0.8 + Math.random() * 0.4) : createDaisy(0.8 + Math.random() * 0.4);
-            flowerDiv.appendChild(flowerType);
-            
-            const x = Math.random() * (window.innerWidth - 150);
-            const y = Math.random() * (window.innerHeight - 200) + 50;
-            
-            flowerDiv.style.left = x + 'px';
-            flowerDiv.style.top = y + 'px';
-            flowerDiv.style.animationDelay = '0s';
-            
-            garden.appendChild(flowerDiv);
-            
-            setTimeout(() => {
-                flowerDiv.style.opacity = '0';
-                flowerDiv.style.transition = 'opacity 2s';
-                setTimeout(() => flowerDiv.remove(), 2000);
-            }, 8000);
-        }
-
-        // Crear flores iniciales
-        window.addEventListener('load', () => {
-            const positions = [
-                { left: '10%', top: '20%' },
-                { left: '85%', top: '25%' },
-                { left: '15%', top: '75%' },
-                { left: '80%', top: '70%' },
-                { left: '50%', top: '10%' },
-                { left: '25%', top: '85%' },
-                { left: '75%', top: '50%' },
-                { left: '40%', top: '30%' },
-                { left: '65%', top: '80%' }
-            ];
-            
-            positions.forEach((pos, index) => {
-                setTimeout(() => {
-                    const garden = document.getElementById('garden');
-                    const flowerDiv = document.createElement('div');
-                    flowerDiv.className = 'flower sunflower';
-                    
-                    const flower = index % 2 === 0 ? createSunflower(0.9) : createDaisy(0.9);
-                    flowerDiv.appendChild(flower);
-                    
-                    flowerDiv.style.left = pos.left;
-                    flowerDiv.style.top = pos.top;
-                    flowerDiv.style.animationDelay = `${index * 0.2}s`;
-                    
-                    garden.appendChild(flowerDiv);
-                }, index * 400);
-            });
         });
 
-        // Auto-crear flores
-        setInterval(() => {
-            const flowerCount = document.querySelectorAll('.flower').length;
-            if (flowerCount < 20) {
-                createFlower();
+        function createTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = x + 'px';
+            trail.style.top = y + 'px';
+            document.body.appendChild(trail);
+            setTimeout(() => trail.remove(), 800);
+        }
+
+        // Clase Flor
+        class Flower {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.type = type;
+                this.size = 0;
+                this.maxSize = 40 + Math.random() * 40;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.swayOffset = Math.random() * Math.PI * 2;
+                this.swaySpeed = 0.02 + Math.random() * 0.02;
+                this.growSpeed = 0.5 + Math.random() * 0.5;
+                this.stemHeight = 80 + Math.random() * 60;
+                this.opacity = 0;
             }
-        }, 4000);
+
+            update() {
+                if (this.size < this.maxSize) {
+                    this.size += this.growSpeed;
+                    this.opacity = Math.min(1, this.size / this.maxSize);
+                }
+                this.swayOffset += this.swaySpeed;
+            }
+
+            draw() {
+                const sway = Math.sin(this.swayOffset) * 5;
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.translate(this.x + sway, this.y);
+
+                // Dibujar tallo
+                ctx.strokeStyle = '#2d5016';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.quadraticCurveTo(sway * 2, -this.stemHeight / 2, sway, -this.stemHeight);
+                ctx.stroke();
+
+                // Dibujar hojas
+                this.drawLeaf(-15, -this.stemHeight * 0.6, -30);
+                this.drawLeaf(15, -this.stemHeight * 0.4, 30);
+
+                // Dibujar flor según tipo
+                ctx.translate(sway, -this.stemHeight);
+                ctx.rotate(this.rotation);
+
+                if (this.type === 'sunflower') {
+                    this.drawSunflower();
+                } else if (this.type === 'daisy') {
+                    this.drawDaisy();
+                } else if (this.type === 'tulip') {
+                    this.drawTulip();
+                } else {
+                    this.drawRose();
+                }
+
+                ctx.restore();
+            }
+
+            drawLeaf(x, y, angle) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle * Math.PI / 180);
+                ctx.fillStyle = '#4a7c2e';
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 12, 6, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#2d5016';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            drawSunflower() {
+                const petalCount = 16;
+                const petalLength = this.size * 0.6;
+                const petalWidth = this.size * 0.3;
+
+                // Pétalos
+                for (let i = 0; i < petalCount; i++) {
+                    const angle = (i / petalCount) * Math.PI * 2;
+                    ctx.save();
+                    ctx.rotate(angle);
+                    ctx.translate(this.size * 0.4, 0);
+                    
+                    const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, petalLength);
+                    gradient.addColorStop(0, '#FFD700');
+                    gradient.addColorStop(0.5, '#FFC700');
+                    gradient.addColorStop(1, '#FFB900');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, petalLength, petalWidth, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.strokeStyle = '#CC9900';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    ctx.restore();
+                }
+
+                // Centro
+                const centerGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size * 0.35);
+                centerGradient.addColorStop(0, '#8B4513');
+                centerGradient.addColorStop(1, '#654321');
+                ctx.fillStyle = centerGradient;
+                ctx.beginPath();
+                ctx.arc(0, 0, this.size * 0.35, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Textura del centro
+                ctx.fillStyle = '#654321';
+                for (let i = 0; i < 30; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const dist = Math.random() * this.size * 0.25;
+                    const x = Math.cos(angle) * dist;
+                    const y = Math.sin(angle) * dist;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            drawDaisy() {
+                const petalCount = 12;
+                const petalLength = this.size * 0.5;
+                const petalWidth = this.size * 0.25;
+
+                // Pétalos
+                for (let i = 0; i < petalCount; i++) {
+                    const angle = (i / petalCount) * Math.PI * 2;
+                    ctx.save();
+                    ctx.rotate(angle);
+                    ctx.translate(this.size * 0.35, 0);
+                    
+                    const gradient = ctx.createLinearGradient(-petalLength/2, 0, petalLength/2, 0);
+                    gradient.addColorStop(0, '#FFEB3B');
+                    gradient.addColorStop(0.5, '#FFF176');
+                    gradient.addColorStop(1, '#FFEB3B');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, petalLength, petalWidth, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.strokeStyle = '#F9A825';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    ctx.restore();
+                }
+
+                // Centro
+                const centerGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size * 0.25);
+                centerGradient.addColorStop(0, '#FF8F00');
+                centerGradient.addColorStop(1, '#FF6F00');
+                ctx.fillStyle = centerGradient;
+                ctx.beginPath();
+                ctx.arc(0, 0, this.size * 0.25, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            drawTulip() {
+                // Pétalos de tulipán (forma de copa)
+                const gradient = ctx.createLinearGradient(0, -this.size, 0, this.size);
+                gradient.addColorStop(0, '#FFD700');
+                gradient.addColorStop(0.5, '#FFC700');
+                gradient.addColorStop(1, '#FFB900');
+
+                ctx.fillStyle = gradient;
+                
+                // Pétalos traseros
+                this.drawTulipPetal(-this.size * 0.4, 0, this.size * 0.35, this.size * 0.7);
+                this.drawTulipPetal(this.size * 0.4, 0, this.size * 0.35, this.size * 0.7);
+                
+                // Pétalo frontal
+                this.drawTulipPetal(0, this.size * 0.1, this.size * 0.4, this.size * 0.8);
+            }
+
+            drawTulipPetal(x, y, width, height) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.beginPath();
+                ctx.moveTo(0, -height / 2);
+                ctx.quadraticCurveTo(width, -height / 3, width * 0.7, height / 2);
+                ctx.quadraticCurveTo(0, height / 2, -width * 0.7, height / 2);
+                ctx.quadraticCurveTo(-width, -height / 3, 0, -height / 2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = '#CC9900';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            drawRose() {
+                // Rosa estilizada en amarillo
+                const layers = 5;
+                for (let layer = layers; layer > 0; layer--) {
+                    const layerSize = (this.size * 0.7) * (layer / layers);
+                    const petalCount = 5 + layer;
+                    const rotation = (layer % 2) * 0.2;
+
+                    for (let i = 0; i < petalCount; i++) {
+                        const angle = (i / petalCount) * Math.PI * 2 + rotation;
+                        ctx.save();
+                        ctx.rotate(angle);
+                        
+                        const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, layerSize);
+                        gradient.addColorStop(0, layer === 1 ? '#FFED4E' : '#FFD700');
+                        gradient.addColorStop(1, '#FFC700');
+                        
+                        ctx.fillStyle = gradient;
+                        ctx.beginPath();
+                        ctx.moveTo(0, 0);
+                        ctx.quadraticCurveTo(layerSize * 0.5, -layerSize * 0.3, layerSize, 0);
+                        ctx.quadraticCurveTo(layerSize * 0.5, layerSize * 0.3, 0, 0);
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.strokeStyle = '#CC9900';
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                }
+            }
+        }
+
+        // Clase Partícula
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 4;
+                this.vy = (Math.random() - 0.5) * 4 - 2;
+                this.life = 1;
+                this.decay = 0.01 + Math.random() * 0.02;
+                this.size = 3 + Math.random() * 5;
+                this.color = `hsl(${45 + Math.random() * 30}, 100%, 50%)`;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.1;
+                this.life -= this.decay;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // Crear partículas de fondo
+        function createBackgroundParticles() {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                document.body.appendChild(particle);
+            }
+        }
+
+        // Plantar flor
+        function plantFlower(x, y) {
+            const types = ['sunflower', 'daisy', 'tulip', 'rose'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            const flower = new Flower(x, y, type);
+            flowers.push(flower);
+            flowerCount++;
+            document.getElementById('flowerCount').textContent = flowerCount;
+
+            // Crear partículas
+            for (let i = 0; i < 20; i++) {
+                particles.push(new Particle(x, y));
+            }
+
+            // Sonido de plantación (síntesis de audio)
+            playPlantSound();
+        }
+
+        // Eventos de mouse
+        canvas.addEventListener('mousedown', () => { isMouseDown = true; });
+        canvas.addEventListener('mouseup', () => { isMouseDown = false; });
+        canvas.addEventListener('mouseleave', () => { isMouseDown = false; });
+
+        canvas.addEventListener('click', (e) => {
+            plantFlower(e.clientX, e.clientY);
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (isMouseDown && Math.random() > 0.7) {
+                plantFlower(e.clientX, e.clientY);
+            }
+        });
+
+        // Eventos táctiles
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            plantFlower(touch.clientX, touch.clientY);
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (Math.random() > 0.5) {
+                const touch = e.touches[0];
+                plantFlower(touch.clientX, touch.clientY);
+            }
+        });
+
+        // Animación principal
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Actualizar y dibujar flores
+            flowers.forEach(flower => {
+                flower.update();
+                flower.draw();
+            });
+
+            // Actualizar y dibujar partículas
+            particles = particles.filter(particle => {
+                particle.update();
+                particle.draw();
+                return particle.life > 0;
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Efecto de escritura
+        function typeWriter(text, elementId, speed = 100) {
+            let i = 0;
+            const element = document.getElementById(elementId);
+            element.textContent = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Música de fondo (síntesis de audio)
+        function initAudio() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playPlantSound() {
+            if (!audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 600 + Math.random() * 400;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+
+        let musicInterval;
+        function toggleMusic() {
+            const btn = document.getElementById('musicBtn');
+            
+            if (!audioContext) {
+                initAudio();
+            }
+
+            if (!musicPlaying) {
+                musicPlaying = true;
+                btn.classList.add('active');
+                btn.textContent = '🎵 Pausar';
+                playBackgroundMusic();
+            } else {
+                musicPlaying = false;
+                btn.classList.remove('active');
+                btn.textContent = '🎵 Música';
+                if (musicInterval) clearInterval(musicInterval);
+            }
+        }
+
+        function playBackgroundMusic() {
+            if (!musicPlaying) return;
+
+            const notes = [523.25, 587.33, 659.25, 698.46, 783.99]; // C, D, E, F, G
+            let noteIndex = 0;
+
+            musicInterval = setInterval(() => {
+                if (!musicPlaying) return;
+
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = notes[noteIndex % notes.length];
+                oscillator.type = 'triangle';
+                
+                gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.8);
+                
+                noteIndex++;
+            }, 800);
+        }
+
+        // Modo noche
+        function toggleMode() {
+            isDarkMode = !isDarkMode;
+            const btn = document.getElementById('modeBtn');
+            
+            if (isDarkMode) {
+                document.body.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)';
+                btn.textContent = '☀️ Modo Día';
+                btn.classList.add('active');
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)';
+                btn.textContent = '🌙 Modo Noche';
+                btn.classList.remove('active');
+            }
+        }
+
+        // Mostrar mensaje
+        function showMessage() {
+            const modal = document.getElementById('messageModal');
+            modal.classList.add('show');
+        }
+
+        function closeMessage() {
+            const modal = document.getElementById('messageModal');
+            modal.classList.remove('show');
+        }
+
+        // Limpiar jardín
+        function clearGarden() {
+            if (confirm('¿Estás segura de que quieres limpiar el jardín? 🥺')) {
+                flowers = [];
+                particles = [];
+                flowerCount = 0;
+                document.getElementById('flowerCount').textContent = '0';
+            }
+        }
+
+        // Iniciar experiencia
+        function startExperience() {
+            const welcome = document.getElementById('welcomeScreen');
+            welcome.classList.add('hidden');
+            
+            setTimeout(() => {
+                welcome.style.display = 'none';
+                createBackgroundParticles();
+                animate();
+                
+                const messages = [
+                    'Cada flor es única, como cada momento contigo...',
+                    'Deja que tu imaginación florezca...',
+                    'Este jardín es tuyo, créalo como quieras...',
+                    'Las flores más bellas crecen con amor...'
+                ];
+                
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                setTimeout(() => {
+                    typeWriter(randomMessage, 'typingText', 80);
+                }, 2000);
+            }, 1000);
+
+            initAudio();
+        }
+
+        // Prevenir zoom en móvil
+        document.addEventListener('touchmove', function(e) {
+            if (e.scale !== 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Cerrar modal con tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeMessage();
+            }
+        });
     </script>
 </body>
 </html>
